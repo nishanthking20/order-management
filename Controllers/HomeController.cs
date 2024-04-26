@@ -22,7 +22,7 @@ namespace Order_Management.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Login()
         {
             Console.WriteLine(id);
             return View();

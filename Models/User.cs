@@ -30,9 +30,9 @@ namespace Order_Management.Models
         // [StringLength(100, MinimumLength = 6)]
         // public required string ConfirmPassword { get; set; }
 
-        // public override string ToString()
-        // {
-        //     return string.Format("User: {0}, {1}, {2}", Name, Email, Password);  
-        // }
+        public override string ToString()
+        {
+            return string.Format("User: {0}, {1}, {2}", Name, Email, Password);  
+        }
     }
 }
