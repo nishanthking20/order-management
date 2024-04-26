@@ -17,7 +17,7 @@ namespace Order_Management.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 8)]
+        [StringLength(12, MinimumLength = 6)]
         public required string Password { get; set; }
 
         
@@ -25,10 +25,10 @@ namespace Order_Management.Models
         
         public bool IsEmailVerified { get; set; }
 
-        // [Required]
-        // [DataType(DataType.Password)]
-        // [StringLength(100, MinimumLength = 6)]
-        // public required string ConfirmPassword { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [StringLength(12, MinimumLength = 6)]
+        public required string ConfirmPassword { get; set; }
 
         public override string ToString()
         {
