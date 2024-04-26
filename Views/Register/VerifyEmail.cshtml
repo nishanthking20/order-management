@@ -5,30 +5,13 @@
 
 <head>
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/registration.css" />
+    <link rel="stylesheet" href="~/css/otp.css" />
 </head>
 <body>
-    <div>
-        <form method="post" asp-action="RegisterUser" asp-controller="Register">
-            <h1>Registration</h1>
-            <div class="form-group">
-                <label asp-for="Name">Username</label>
-                <input asp-for="Name" type="text" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
-                <input asp-for="Email" type="email" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Password">Password</label>
-                <input asp-for="Password" type="password" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Confirm Password</label>
-                <input name="ConfirmPassword" id="ConfirmPassword" type="password" class="form-control" />
-            </div>
-            <button type="submit" value="Register" class="btn btn-primary">Register</button>
-        </form>
-    </div>
+    <form asp-action="VerifyEmail" asp-controller="Register" method="post">
+        <h2>Enter OTP</h2>
+        <input type="text" name="otp" maxlength="6" placeholder="Enter OTP" required>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>
