@@ -21,11 +21,6 @@ namespace Order_Management.Models
         [StringLength(12, MinimumLength = 6)]
         public required string Password { get; set; }
 
-        
-        public int VerificationCode { get; set; }
-        
-        public bool IsEmailVerified { get; set; }
-
         [NotMapped]
         [Compare("Password")]
         [Required]
@@ -35,7 +30,7 @@ namespace Order_Management.Models
 
         public override string ToString()
         {
-            return string.Format("User: {0}, {1}, {2}, {3}, {4}, {5}, {6}", Id, Name, Email, Password, ConfirmPassword, IsEmailVerified, VerificationCode);  
+            return string.Format("User: {0}, {1}, {2}, {3}, {4}", Id, Name, Email, Password, ConfirmPassword);  
         }
     }
 }
