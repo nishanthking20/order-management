@@ -6,6 +6,7 @@ using Order_Management.Models;
 using Order_Management.Services;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace Order_Management.Controllers {
 
@@ -23,37 +24,34 @@ namespace Order_Management.Controllers {
         [HttpPost]
         public IActionResult RegisterUser(User user)
         {
+
+            Console.WriteLine(user.ToString());
+
             // Check if the model is valid based on data annotations and constraints
             if (!ModelState.IsValid)
             {
                 // If the model is not valid, return the registration view with validation errors
-                return View(user);
+                return RedirectToAction("Register","Home");
             }
 
-            // Check if password and confirm password match
-            if (user.Password != user.ConfirmPassword)
-            {
-                ModelState.AddModelError("ConfirmPassword", "Password and confirm password do not match.");
-                return View(user);
-            }
-            else
-            {
-                // Generate OTP (Example: 6-digit random number)
-                var otp = new Random().Next(100000, 999999);
+            // Generate OTP and store it in session
+            var otp = new Random().Next(100000, 999999);
+             
+            user.VerificationCode = otp;  // Store OTP along with user's email in the database
+            user.IsEmailVerified = false; // Set email verification status to false
+            HttpContext.Session.SetInt32("OTP", otp);
+            HttpContext.Session.SetString("UserEmail", user.Email);
 
-                // Store OTP along with user's email in the database
-                user.VerificationCode = otp;
-                user.IsEmailVerified = false; // Set email verification status to false
-                _context.User.Add(user);
-                _context.SaveChanges();
 
-                // Send email with OTP to user's email address
-                _emailService.SendEmail(user.Email, "Email Verification", $"Your OTP is: {otp}");
+           
+                
+            // Send email with OTP to user's email address
+            _emailService.SendEmail(user.Email, "Email Verification", $"Your OTP is: {otp}");
 
-                // Redirect to the email verification page
-                return RedirectToAction("VerifyEmail", new { email = user.Email });
-            }
+            // Redirect to the email verification page
+            return RedirectToAction("VerifyEmail");
         }
+    
 
 
         [HttpGet]
@@ -63,18 +61,19 @@ namespace Order_Management.Controllers {
         }
 
         [HttpPost]
-        public IActionResult VerifyEmail(string otp)
+        public IActionResult VerifyEmail(User user,string otp)
         {
-            // Retrieve OTP and user's email from session or database
-            var sessionOTP = HttpContext.Session.GetString("OTP");
+            // Retrieve OTP and user's email from session
+            var sessionOTP = HttpContext.Session.GetInt32("OTP");
             var userEmail = HttpContext.Session.GetString("UserEmail");
 
-            // Verify the entered OTP
-            if (otp == sessionOTP)
+            // Verify OTP
+            if (sessionOTP.HasValue && otp == sessionOTP.Value.ToString())
             {
                 // OTP is correct, proceed with registration
-                // You can register the user here or redirect to the registration success page
-                return RedirectToAction("Dashboard","Shared");
+                _context.User.Add(user);
+                _context.SaveChanges();
+                return RedirectToAction("Dashboard", "Shared");
             }
             else
             {

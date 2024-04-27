@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Order_Management.Models
 {
     public class User
@@ -25,6 +26,8 @@ namespace Order_Management.Models
         
         public bool IsEmailVerified { get; set; }
 
+        [NotMapped]
+        [Compare("Password")]
         [Required]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 6)]
@@ -32,7 +35,7 @@ namespace Order_Management.Models
 
         public override string ToString()
         {
-            return string.Format("User: {0}, {1}, {2}", Name, Email, Password);  
+            return string.Format("User: {0}, {1}, {2}, {3}, {4}, {5}, {6}", Id, Name, Email, Password, ConfirmPassword, IsEmailVerified, VerificationCode);  
         }
     }
 }
