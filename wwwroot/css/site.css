@@ -19,4 +19,29 @@ html {
 
 body {
   margin-bottom: 60px;
+
+}
+.nav-link{
+  font-size: 1.2rem;
+}
+.nav-item{
+  border-radius: 10px;
+  transition:300ms;
+}
+.nav-item:hover{
+  background-color: #808080;
+  border-radius: 10px;
+}
+.navbar-brand{
+  font-size: 30px;
+  font-style: italic;
+  font-weight: bold;
+  background-image: linear-gradient(to right, #4ca2cd, #67B26F);
+  background-clip: text;
+  color: transparent;
+}
+.navbar-brand:hover{
+  background-image: linear-gradient(to right, #4ca2cd, #67B26F);
+  background-clip: text;
+  color: transparent;
 }
