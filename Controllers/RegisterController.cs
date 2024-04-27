@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,10 @@ using Order_Management.Services;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace Order_Management.Controllers {
 
@@ -14,6 +19,8 @@ namespace Order_Management.Controllers {
     {
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService; // Implement IEmailService to send emails
+
+        private User otpReceivedUser;
 
         public RegisterController(ApplicationDbContext context, IEmailService emailService)
         {
@@ -25,7 +32,7 @@ namespace Order_Management.Controllers {
         public IActionResult RegisterUser(User user)
         {
 
-            Console.WriteLine(user.ToString());
+            // Console.WriteLine(user.ToString());
 
             // Check if the model is valid based on data annotations and constraints
             if (!ModelState.IsValid)
@@ -33,20 +40,26 @@ namespace Order_Management.Controllers {
                 // If the model is not valid, return the registration view with validation errors
                 return RedirectToAction("Register","Home");
             }
+            if (string.IsNullOrWhiteSpace(user.Name))
+            {
+                // If the Name property is not provided, add a model error
+                ModelState.AddModelError("Name", "The Name field is required.");
+                return View(user); // Return to the registration view with errors
+            }
+        
 
             // Generate OTP and store it in session
             var otp = new Random().Next(100000, 999999);
              
-            user.VerificationCode = otp;  // Store OTP along with user's email in the database
-            user.IsEmailVerified = false; // Set email verification status to false
             HttpContext.Session.SetInt32("OTP", otp);
-            HttpContext.Session.SetString("UserEmail", user.Email);
-
-
-           
+            var userBytes = JsonSerializer.SerializeToUtf8Bytes(user,
+                    new JsonSerializerOptions { WriteIndented = false, IgnoreNullValues = true });
+            HttpContext.Session.Set("User", userBytes);
                 
             // Send email with OTP to user's email address
             _emailService.SendEmail(user.Email, "Email Verification", $"Your OTP is: {otp}");
+
+            otpReceivedUser = user;
 
             // Redirect to the email verification page
             return RedirectToAction("VerifyEmail");
@@ -61,28 +74,48 @@ namespace Order_Management.Controllers {
         }
 
         [HttpPost]
-        public IActionResult VerifyEmail(User user,string otp)
+        public IActionResult VerifyEmail(string otp)
         {
-            // Retrieve OTP and user's email from session
-            var sessionOTP = HttpContext.Session.GetInt32("OTP");
-            var userEmail = HttpContext.Session.GetString("UserEmail");
+            try
+            {
+                // Retrieve OTP and user's email from session
+                var sessionOTP = HttpContext.Session.GetInt32("OTP");
+                var userBytes = HttpContext.Session.Get("User");
+                User user = JsonSerializer.Deserialize<User>(new ReadOnlySpan<byte>(userBytes));
 
-            // Verify OTP
-            if (sessionOTP.HasValue && otp == sessionOTP.Value.ToString())
-            {
-                // OTP is correct, proceed with registration
-                _context.User.Add(user);
-                _context.SaveChanges();
-                return RedirectToAction("Dashboard", "Shared");
+                // Verify OTP
+                if (sessionOTP.HasValue && otp == sessionOTP.Value.ToString())
+                {
+                    // OTP is correct, proceed with registration
+                    _context.User.Add(user);
+                    _context.SaveChanges();
+                    return RedirectToAction("Dashboard","Home");
+                }
+                else
+                {
+                    // OTP is incorrect, display error message
+                    ModelState.AddModelError("otp", "Invalid OTP. Please try again.");
+                    return View();
+                }
             }
-            else
+            catch (DbUpdateException ex)
             {
-                // OTP is incorrect, display error message
-                ModelState.AddModelError("otp", "Invalid OTP. Please try again.");
-                return View();
+                // Handle database update exception
+                // Check if InnerException is not null before accessing it
+                if (ex.InnerException != null)
+                {
+                    // Access InnerException properties or handle it further
+                    Console.WriteLine("InnerException Message: " + ex.InnerException.Message);
+                }
+                else
+                {
+                    Console.WriteLine("No InnerException found.");
+                }
+                
+                // Redirect to a login page or return an error view
+                return RedirectToAction("Register");
             }
         }
 
     }
-
 }
