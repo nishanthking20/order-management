@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 namespace Order_Management.Models
 {
     public class User
@@ -7,16 +8,19 @@ namespace Order_Management.Models
 
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Username is required")]
+        [BindProperty]
         [StringLength(100)]
         public required string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Email is required")]
+        [BindProperty]
         [EmailAddress]
         [StringLength(100)]
         public required string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Password is required")]
+        [BindProperty]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 6)]
         public required string Password { get; set; }
@@ -28,7 +32,8 @@ namespace Order_Management.Models
 
         [NotMapped]
         [Compare("Password")]
-        [Required]
+        [Required(ErrorMessage ="Confirm password is required")]
+        [BindProperty]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 6)]
         public required string ConfirmPassword { get; set; }

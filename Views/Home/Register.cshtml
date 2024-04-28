@@ -3,76 +3,40 @@
     ViewData["Title"] = "Register";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
-    <style>
-        /* Add your CSS styles here */
-        form {
-            border-radius: 10px;
-            background: #9D50BB;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #6E48AA, #9D50BB);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #6E48AA, #9D50BB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-            min-height: 400px;
-            width: 400px;
-            border: 1px solid #808080;
-            padding: 30px;
-            color: white;
-        }
-
-        form div {
-            padding: 5px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <form method="post" asp-action="RegisterUser" asp-controller="Register">
-        <h1 class="text-center">Registration</h1>
-        <div class="form-group">
-            <label asp-for="Name">Username</label>
-            <input asp-for="Name" type="text" class="form-control" required />
+<form class="border bg-outline-primary" method="post" asp-action="RegisterUser" asp-controller="Register">
+    <div class="cotainer mt-4 mb-4 p-3">
+            <h1 class="text-center">Registration</h1>
+        <div class="row mb-4">
+            <div class="form-group col">
+                <label asp-for="Name"><strong>Username</strong></label>
+                <input asp-for="Name" type="text" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Email">Email</label>
-            <input asp-for="Email" type="email" class="form-control" required />
+        <div class="row mb-4">
+            <div class="form-group col">
+                <label asp-for="Email"><strong>Email</strong></label>
+                <input asp-for="Email" type="email" class="form-control"  />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Password">Password</label>
-            <input asp-for="Password" type="password" class="form-control" required />
+        <div class="row mb-4">
+            <div class="form-group col">
+                <label asp-for="Password" class="text-dark"><strong>Password</strong></label>
+                <input asp-for="Password" type="password" class="form-control"  />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Confirm Password</label>
-            <input asp-for="ConfirmPassword"  type="password" class="form-control" required />
+        <div class="row mb-4">
+            <div class="form-group col">
+                <label><strong>Confirm Password</strong></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
         </div>
-        <div class="text-center">
-            <button type="submit" value="Register">Register</button>
+            <div class="text-center pt-4">
+                <button type="submit" class="btn btn-outline-danger" value="Register">Register</button>
+            </div>
         </div>
-    </form>
-</body>
-</html>
+    </div>
+</form>

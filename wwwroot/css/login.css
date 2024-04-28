@@ -1,37 +1,21 @@
-﻿.container {
-    margin-top: 100px;
-}
-
-.card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.card-body {
-    padding: 30px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-control {
-    border-radius: 3px;
-}
-
-.btn-login {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-}
-
-    .btn-login:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
+﻿body{
+    height: 100vh;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+  form{
+    background: #9D50BB;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #6E48AA, #9D50BB);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #6E48AA, #9D50BB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
+    min-height:200px;
+    width: 400px;
+    border:1px solid #808080;
+    padding:30px;
+    color:white;
+  }
+  form div{
+    padding:5px;
+  }
+  

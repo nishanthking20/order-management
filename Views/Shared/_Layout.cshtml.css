@@ -6,6 +6,12 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
 }
+.navbar {
+  position: fixed;
+  top: 0; /* Stick it to the top */
+  left: 0; /* Align it to the left */
+  width: 100%;
+}
 
 
 .btn-primary {
