@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc;
+
 namespace Order_Management.Models
 {
     public class User
@@ -9,33 +9,29 @@ namespace Order_Management.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Username is required")]
-        [BindProperty]
         [StringLength(100)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
-        [Required(ErrorMessage ="Email is required")]
-        [BindProperty]
+        [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         [StringLength(100)]
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
-        [Required(ErrorMessage ="Password is required")]
-        [BindProperty]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 6)]
-        public required string Password { get; set; }
+        public string Password { get; set; }
 
         [NotMapped]
         [Compare("Password")]
-        [Required(ErrorMessage ="Confirm password is required")]
-        [BindProperty]
+        [Required(ErrorMessage = "Confirm password is required")]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 6)]
-        public required string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; }
 
         public override string ToString()
         {
-            return string.Format("User: {0}, {1}, {2}, {3}, {4}", Id, Name, Email, Password, ConfirmPassword);  
+            return string.Format("User: {0}, {1}, {2}, {3}, {4}", Id, Name, Email, Password, ConfirmPassword);
         }
     }
 }

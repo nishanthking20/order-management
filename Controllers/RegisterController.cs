@@ -1,20 +1,11 @@
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Order_Management.Data;
 using Order_Management.Models;
 using Order_Management.Services;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
-
-namespace Order_Management.Controllers {
-
+namespace Order_Management.Controllers 
+{
     public class RegisterController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,29 +19,21 @@ namespace Order_Management.Controllers {
             _emailService = emailService;
         }
 
+        
+
+
         [HttpPost]
         public IActionResult RegisterUser(User user)
         {
-
-            // Console.WriteLine(user.ToString());
-
             // Check if the model is valid based on data annotations and constraints
             if (!ModelState.IsValid)
             {
                 // If the model is not valid, return the registration view with validation errors
                 return RedirectToAction("Register","Home");
             }
-            if (string.IsNullOrWhiteSpace(user.Name))
-            {
-                // If the Name property is not provided, add a model error
-                ModelState.AddModelError("Name", "The Name field is required.");
-                return View(user); // Return to the registration view with errors
-            }
         
-
             // Generate OTP and store it in session
             var otp = new Random().Next(100000, 999999);
-             
             HttpContext.Session.SetInt32("OTP", otp);
             var userBytes = JsonSerializer.SerializeToUtf8Bytes(user,
                     new JsonSerializerOptions { WriteIndented = false, IgnoreNullValues = true });
@@ -64,8 +47,6 @@ namespace Order_Management.Controllers {
             // Redirect to the email verification page
             return RedirectToAction("VerifyEmail");
         }
-    
-
 
         [HttpGet]
         public IActionResult VerifyEmail()
@@ -119,3 +100,4 @@ namespace Order_Management.Controllers {
 
     }
 }
+
