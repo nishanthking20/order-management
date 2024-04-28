@@ -18,18 +18,23 @@ namespace Order_Management.Controllers
 
         public IActionResult Index(int id)
         {
-            Console.WriteLine(id);
+            // Console.WriteLine(id);
             return View();
         }
 
         public IActionResult Login()
         {
-            Console.WriteLine(id);
+            // Console.WriteLine(id);
             return View();
         }
         public IActionResult Register()
         {
-            Console.WriteLine(id);
+            // Console.WriteLine(id);
+            return View();
+        }
+         public IActionResult Dashboard()
+        {
+            // Console.WriteLine(id);
             return View();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
