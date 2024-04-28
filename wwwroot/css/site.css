@@ -21,6 +21,9 @@ body {
   margin-bottom: 60px;
 
 }
+.navbar{
+  background-color: #111315;
+}
 .nav-link{
   font-size: 1.2rem;
 }
