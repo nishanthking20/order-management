@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Order_Management.Data;
 using Order_Management.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +17,10 @@ builder.Services.AddSession();
 builder.Services.AddTransient<IEmailService, SmtpEmailService>(provider =>
 {
     // Load SMTP server settings from configuration
-    var smtpServer = builder.Configuration["EmailSettings:SmtpServer"];
-    var smtpPort = int.Parse(builder.Configuration["EmailSettings:SmtpPort"]);
-    var smtpUsername = builder.Configuration["EmailSettings:SmtpUsername"];
-    var smtpPassword = builder.Configuration["EmailSettings:SmtpPassword"];
-
+    string smtpServer = builder.Configuration["EmailSettings:SmtpServer"] ?? throw new ArgumentNullException(nameof(smtpServer));
+    int smtpPort = int.Parse(builder.Configuration["EmailSettings:SmtpPort"] ?? throw new ArgumentNullException(nameof(smtpPort)));
+    string smtpUsername = builder.Configuration["EmailSettings:SmtpUsername"] ?? throw new ArgumentNullException(nameof(smtpUsername));
+    string smtpPassword = builder.Configuration["EmailSettings:SmtpPassword"] ?? throw new ArgumentNullException(nameof(smtpPassword));
 
     return new SmtpEmailService(smtpServer, smtpPort, smtpUsername, smtpPassword);
 });

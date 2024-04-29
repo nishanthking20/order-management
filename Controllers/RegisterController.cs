@@ -7,6 +7,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Order_Management.Controllers
 {
@@ -33,23 +34,27 @@ namespace Order_Management.Controllers
                 // Hash the input password
                 using (SHA256 sha256Hash = SHA256.Create())
                 {
-                    byte[] hashedPasswordBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
-                    StringBuilder hashedPasswordBuilder = new StringBuilder();
-                    foreach (byte b in hashedPasswordBytes)
+                    if (user.Password != null)
                     {
-                        hashedPasswordBuilder.Append(b.ToString("x2"));
-                    }
+                        byte[] hashedPasswordBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                        StringBuilder hashedPasswordBuilder = new StringBuilder();
+                        foreach (byte b in hashedPasswordBytes)
+                        {
+                            hashedPasswordBuilder.Append(b.ToString("x2"));
+                        }
 
-                    string hashedPassword = hashedPasswordBuilder.ToString();
+                        string hashedPassword = hashedPasswordBuilder.ToString();
 
-                    // Compare the hashed password with the stored hashed password
-                    if (userInDb != null && hashedPassword == userInDb.Password)
-                    {
-                        Console.WriteLine(userInDb.Password+" "+hashedPassword);
-                        // Successful login, redirect to the dashboard
-                        return RedirectToAction("Items", "Dashboard");
+                        // Compare the hashed password with the stored hashed password
+                        if (userInDb != null && hashedPassword == userInDb.Password)
+                        {
+                            Console.WriteLine(userInDb.Password + " " + hashedPassword);
+                            // Successful login, redirect to the dashboard
+                            return RedirectToAction("Items", "Dashboard");
+                        }
                     }
                 }
+
             }
 
             // Either user not found or incorrect password, redirect to the login page
@@ -69,13 +74,16 @@ namespace Order_Management.Controllers
             // Hash the password
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
+                if (user.Password != null)
                 {
-                    builder.Append(bytes[i].ToString("x2"));
+                    byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        builder.Append(bytes[i].ToString("x2"));
+                    }
+                    user.Password = builder.ToString();
                 }
-                user.Password = builder.ToString();
             }
 
             var existingUser = _context.User.FirstOrDefault(u => u.Email == user.Email);
@@ -95,7 +103,10 @@ namespace Order_Management.Controllers
             HttpContext.Session.Set("User", userBytes);
 
             // Send email with OTP to user's email address
-            _emailService.SendEmail(user.Email, "Email Verification", $"Your OTP is: {otp}");
+            if (user.Email != null)
+            {
+                _emailService.SendEmail(user.Email, "Email Verification", $"Your OTP is: {otp}");
+            }
 
             // Assign user to otpReceivedUser
             otpReceivedUser = user;
@@ -113,7 +124,7 @@ namespace Order_Management.Controllers
         [HttpPost]
         public IActionResult VerifyEmail(string otp)
         {
-             try
+            try
             {
                 // Retrieve OTP and user's email from session
                 var sessionOTP = HttpContext.Session.GetInt32("OTP");
@@ -127,7 +138,7 @@ namespace Order_Management.Controllers
                     // OTP is correct, proceed with registration
                     _context.User.Add(user);
                     _context.SaveChanges();
-                    return RedirectToAction("Items","Dashboard");
+                    return RedirectToAction("Items", "Dashboard");
                 }
                 else
                 {
