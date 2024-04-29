@@ -19,6 +19,20 @@ namespace Order_Management.Controllers
             _emailService = emailService;
         }
 
+        [HttpPost]
+        public IActionResult LoginUser(User user){
+
+            var Name = _context.User.FirstOrDefault(u => u.Name == user.Name);
+            var Password = _context.User.FirstOrDefault(u => u.Password == user.Password);
+            if(Name!=null && Password!=null)
+            {
+                return RedirectToAction("Items","Dashboard");
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
         
 
 
@@ -29,6 +43,14 @@ namespace Order_Management.Controllers
             if (!ModelState.IsValid)
             {
                 // If the model is not valid, return the registration view with validation errors
+                return RedirectToAction("Register","Home");
+            }
+
+            var existingUser = _context.User.FirstOrDefault(u => u.Email == user.Email);
+            if (existingUser != null)
+            {
+                // Add model error indicating that the email already exists
+                ModelState.AddModelError("Email", "Email already exists. Please use a different email address.");
                 return RedirectToAction("Register","Home");
             }
         
