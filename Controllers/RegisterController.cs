@@ -70,7 +70,7 @@ namespace Order_Management.Controllers
                     // OTP is correct, proceed with registration
                     _context.User.Add(user);
                     _context.SaveChanges();
-                    return RedirectToAction("Dashboard","Home");
+                    return RedirectToAction("Items","Dashboard");
                 }
                 else
                 {

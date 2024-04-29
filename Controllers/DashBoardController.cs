@@ -4,38 +4,28 @@ using System.Diagnostics;
 
 namespace Order_Management.Controllers
 {
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<DashboardController> _logger;
 
         public int id;
 
-        public HomeController(ILogger<HomeController> logger)
+        public DashboardController(ILogger<DashboardController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index(int id)
+        public IActionResult Items()
         {
-            // Console.WriteLine(id);
+            return View();
+        }
+        public IActionResult History(){
+            return View();
+        }
+        public IActionResult Cart(){
             return View();
         }
 
-        public IActionResult Login()
-        {
-            // Console.WriteLine(id);
-            return View();
-        }
-        public IActionResult Register()
-        {
-            // Console.WriteLine(id);
-            return View();
-        }
-        public IActionResult Dashboard()
-        {
-            // Console.WriteLine(id);
-            return View("~/Views/Shared/Dashboard.cshtml");
-        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
