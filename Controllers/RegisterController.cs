@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Order_Management.Data;
 using Order_Management.Models;
 using Order_Management.Services;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 namespace Order_Management.Controllers 
 {
@@ -20,19 +22,38 @@ namespace Order_Management.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoginUser(User user){
+        public IActionResult LoginUser(User user)
+        {
+            var userInDb = _context.User.FirstOrDefault(u => u.Name == user.Name);
 
-            var Name = _context.User.FirstOrDefault(u => u.Name == user.Name);
-            var Password = _context.User.FirstOrDefault(u => u.Password == user.Password);
-            if(Name!=null && Password!=null)
+            if (userInDb != null)
             {
-                return RedirectToAction("Items","Dashboard");
+                // Hash the input password
+                using (SHA256 sha256Hash = SHA256.Create())
+                {
+                    byte[] hashedPasswordBytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                    StringBuilder hashedPasswordBuilder = new StringBuilder();
+                    foreach (byte b in hashedPasswordBytes)
+                    {
+                        hashedPasswordBuilder.Append(b.ToString("x2"));
+                    }
+
+                    string hashedPassword = hashedPasswordBuilder.ToString();
+
+                    // Compare the hashed password with the stored hashed password
+                    if (userInDb != null && hashedPassword == userInDb.Password)
+                    {
+                        Console.WriteLine(userInDb.Password+" "+hashedPassword);
+                        // Successful login, redirect to the dashboard
+                        return RedirectToAction("Items", "Dashboard");
+                    }
+                }
             }
-            else
-            {
-                return RedirectToAction("Login");
-            }
+
+            // Either user not found or incorrect password, redirect to the login page
+            return RedirectToAction("Login", "Home");
         }
+
         
 
 
@@ -45,6 +66,17 @@ namespace Order_Management.Controllers
                 // If the model is not valid, return the registration view with validation errors
                 return RedirectToAction("Register","Home");
             }
+            // Hash the password
+        using (SHA256 sha256Hash = SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            user.Password = builder.ToString();
+        }
 
             var existingUser = _context.User.FirstOrDefault(u => u.Email == user.Email);
             if (existingUser != null)
