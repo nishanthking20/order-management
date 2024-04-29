@@ -3,17 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using Order_Management.Data;
 using Order_Management.Models;
 using Order_Management.Services;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-namespace Order_Management.Controllers 
+
+namespace Order_Management.Controllers
 {
     public class RegisterController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService; // Implement IEmailService to send emails
 
-        private User otpReceivedUser;
+        private User? otpReceivedUser; // Declare the field as nullable
 
         public RegisterController(ApplicationDbContext context, IEmailService emailService)
         {
@@ -54,9 +56,6 @@ namespace Order_Management.Controllers
             return RedirectToAction("Login", "Home");
         }
 
-        
-
-
         [HttpPost]
         public IActionResult RegisterUser(User user)
         {
@@ -64,38 +63,41 @@ namespace Order_Management.Controllers
             if (!ModelState.IsValid)
             {
                 // If the model is not valid, return the registration view with validation errors
-                return RedirectToAction("Register","Home");
+                return RedirectToAction("Register", "Home");
             }
+
             // Hash the password
-        using (SHA256 sha256Hash = SHA256.Create())
-        {
-            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
+            using (SHA256 sha256Hash = SHA256.Create())
             {
-                builder.Append(bytes[i].ToString("x2"));
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                user.Password = builder.ToString();
             }
-            user.Password = builder.ToString();
-        }
 
             var existingUser = _context.User.FirstOrDefault(u => u.Email == user.Email);
             if (existingUser != null)
             {
                 // Add model error indicating that the email already exists
                 ModelState.AddModelError("Email", "Email already exists. Please use a different email address.");
-                return RedirectToAction("Register","Home");
+                return RedirectToAction("Register", "Home");
             }
-        
+
             // Generate OTP and store it in session
             var otp = new Random().Next(100000, 999999);
             HttpContext.Session.SetInt32("OTP", otp);
-            var userBytes = JsonSerializer.SerializeToUtf8Bytes(user,
-                    new JsonSerializerOptions { WriteIndented = false, IgnoreNullValues = true });
+
+            // Serialize user object with default options
+            var userBytes = JsonSerializer.SerializeToUtf8Bytes(user);
             HttpContext.Session.Set("User", userBytes);
-                
+
             // Send email with OTP to user's email address
             _emailService.SendEmail(user.Email, "Email Verification", $"Your OTP is: {otp}");
 
+            // Assign user to otpReceivedUser
             otpReceivedUser = user;
 
             // Redirect to the email verification page
@@ -111,12 +113,13 @@ namespace Order_Management.Controllers
         [HttpPost]
         public IActionResult VerifyEmail(string otp)
         {
-            try
+             try
             {
                 // Retrieve OTP and user's email from session
                 var sessionOTP = HttpContext.Session.GetInt32("OTP");
                 var userBytes = HttpContext.Session.Get("User");
-                User user = JsonSerializer.Deserialize<User>(new ReadOnlySpan<byte>(userBytes));
+                User? user = JsonSerializer.Deserialize<User>(new ReadOnlySpan<byte>(userBytes)) ?? new User();
+
 
                 // Verify OTP
                 if (sessionOTP.HasValue && otp == sessionOTP.Value.ToString())
@@ -146,12 +149,10 @@ namespace Order_Management.Controllers
                 {
                     Console.WriteLine("No InnerException found.");
                 }
-                
+
                 // Redirect to a login page or return an error view
                 return RedirectToAction("Register");
             }
         }
-
     }
 }
-
