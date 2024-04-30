@@ -86,11 +86,12 @@ namespace Order_Management.Controllers
                 }
             }
 
-            var existingUser = _context.User.FirstOrDefault(u => u.Email == user.Email);
-            if (existingUser != null)
+            var existingEmail = _context.User.FirstOrDefault(u => u.Email == user.Email);
+            var existingName = _context.User.FirstOrDefault(u => u.Name ==user.Name);
+            if (existingName != null && existingEmail != null)
             {
                 // Add model error indicating that the email already exists
-                ModelState.AddModelError("Email", "Email already exists. Please use a different email address.");
+                ModelState.AddModelError("Email Or Name", "Email or Name already exists. Please use a different email address.");
                 return RedirectToAction("Register", "Home");
             }
 
