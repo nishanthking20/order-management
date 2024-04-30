@@ -1,23 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Order_Management.Models;
+using Order_Management.Data;
 using System.Diagnostics;
 
 namespace Order_Management.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly ILogger<DashboardController> _logger;
-
+        private readonly ApplicationDbContext DB;
         public int id;
 
-        public DashboardController(ILogger<DashboardController> logger)
+        public DashboardController(ApplicationDbContext db_context)
         {
-            _logger = logger;
+            DB = db_context;
         }
 
         public IActionResult Items()
         {
-            return View();
+            List<Item> items = DB.Items.ToList<Item>();
+            // foreach(Item item in items) {
+            //     Console.WriteLine(item.ItemName);
+            // }
+            return View(items);
         }
         public IActionResult History(){
             return View();
