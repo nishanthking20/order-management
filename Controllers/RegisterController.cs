@@ -88,7 +88,8 @@ namespace Order_Management.Controllers
 
             var existingEmail = _context.User.FirstOrDefault(u => u.Email == user.Email);
             var existingName = _context.User.FirstOrDefault(u => u.Name ==user.Name);
-            if (existingName != null && existingEmail != null)
+            Console.WriteLine(existingEmail+" "+existingName);
+            if (existingName != null || existingEmail != null)
             {
                 // Add model error indicating that the email already exists
                 ModelState.AddModelError("Email Or Name", "Email or Name already exists. Please use a different email address.");
