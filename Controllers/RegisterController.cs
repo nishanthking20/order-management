@@ -56,9 +56,11 @@ namespace Order_Management.Controllers
                 }
 
             }
-
-            // Either user not found or incorrect password, redirect to the login page
-            return RedirectToAction("Login", "Home");
+            else
+            {
+                TempData["AlertMessage"] = "Username or Password is Incorrect.";
+                return RedirectToAction("Login", "Home");
+            }
         }
 
         [HttpPost]
