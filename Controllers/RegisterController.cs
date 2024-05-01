@@ -48,19 +48,21 @@ namespace Order_Management.Controllers
                         // Compare the hashed password with the stored hashed password
                         if (userInDb != null && hashedPassword == userInDb.Password)
                         {
-                            Console.WriteLine(userInDb.Password + " " + hashedPassword);
                             // Successful login, redirect to the dashboard
                             return RedirectToAction("Items", "Dashboard");
+                        }
+                        else
+                        {
+                            TempData["AlertMessage"] = "Password is Incorrect.";
+                            return RedirectToAction("Login", "Home");
                         }
                     }
                 }
 
             }
-            else
-            {
-                TempData["AlertMessage"] = "Username or Password is Incorrect.";
-                return RedirectToAction("Login", "Home");
-            }
+            
+            TempData["AlertMessage"] = "Username is Incorrect.";
+            return RedirectToAction("Login", "Home");
         }
 
         [HttpPost]
