@@ -4,36 +4,43 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     @RenderSection("Styles", required: false)
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Dashboard Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>   
+    <nav class="navbar navbar-expand-lg bg-primary text-light" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" asp-action="Items" asp-controller="Dashboard" >Items</a>
+            <div class="collapse navbar-collapse"  id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" asp-action="Items" asp-controller="Dashboard">Items
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-action="History" asp-controller="Dashboard">History</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-action="Cart" asp-controller="Dashboard">Pricing</a>
+                        <a class="nav-link" asp-action="Cart" asp-controller="Dashboard">Cart</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index" tabindex="-1" aria-disabled="true">Logout</a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Home">Logout</a>
                     </li>
                 </ul>
+                <form class="d-flex">
+                    <input class="form-control me-sm-2" type="search" placeholder="Search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit" fdprocessedid="5pnwbg">Search</button>
+                </form>
             </div>
         </div>
     </nav>
@@ -46,4 +53,5 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>
