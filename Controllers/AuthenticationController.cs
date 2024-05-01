@@ -11,19 +11,31 @@ using System.Threading.Tasks;
 
 namespace Order_Management.Controllers
 {
-    public class RegisterController : Controller
+    public class AuthenticationController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService; // Implement IEmailService to send emails
 
         private User? otpReceivedUser; // Declare the field as nullable
 
-        public RegisterController(ApplicationDbContext context, IEmailService emailService)
+        public AuthenticationController(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
         }
+        [HttpGet]
+        public IActionResult LoginUser()
+        {
+            // Console.WriteLine(id);
+            return View();
+        }
 
+        [HttpGet]
+        public IActionResult RegisterUser()
+        {
+            // Console.WriteLine(id);
+            return View();
+        }
         [HttpPost]
         public IActionResult LoginUser(User user)
         {
@@ -53,16 +65,16 @@ namespace Order_Management.Controllers
                         }
                         else
                         {
-                            TempData["AlertMessage"] = "Password is Incorrect.";
-                            return RedirectToAction("Login", "Home");
+                            TempData["LoginAlertMessage"] = "Password is Incorrect.";
+                            return View();
                         }
                     }
                 }
 
             }
             
-            TempData["AlertMessage"] = "Username is Incorrect.";
-            return RedirectToAction("Login", "Home");
+            TempData["LoginAlertMessage"] = "Username is Incorrect.";
+            return View();
         }
 
         [HttpPost]
@@ -72,22 +84,30 @@ namespace Order_Management.Controllers
             if (!ModelState.IsValid)
             {
                 // If the model is not valid, return the registration view with validation errors
-                return RedirectToAction("Register", "Home");
+                return View();
             }
 
-            // Hash the password
-            using (SHA256 sha256Hash = SHA256.Create())
+            if(user.Password == user.ConfirmPassword)
             {
-                if (user.Password != null)
+
+                using (SHA256 sha256Hash = SHA256.Create())
                 {
-                    byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
-                    StringBuilder builder = new StringBuilder();
-                    for (int i = 0; i < bytes.Length; i++)
+                    if (user.Password != null)
                     {
-                        builder.Append(bytes[i].ToString("x2"));
+                        byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                        StringBuilder builder = new StringBuilder();
+                        for (int i = 0; i < bytes.Length; i++)
+                        {
+                            builder.Append(bytes[i].ToString("x2"));
+                        }
+                        user.Password = builder.ToString();
                     }
-                    user.Password = builder.ToString();
                 }
+            }
+            else
+            {
+                TempData["RegisterAlertMessage"] = "Password and Confirm Password are not equal.";
+                return View();
             }
 
             var existingEmail = _context.User.FirstOrDefault(u => u.Email == user.Email);
@@ -95,8 +115,8 @@ namespace Order_Management.Controllers
             if (existingName != null || existingEmail != null)
             {
                 // Add model error indicating that the email already exists
-                TempData["AlertMessage"] = "Email or Username already exists. Please use a different email address or username.";
-                return RedirectToAction("Register", "Home");
+                TempData["RegisterAlertMessage"] = "Email or Username already exists. Please use a different email address or username.";
+                return View();
             }
 
             // Generate OTP and store it in session
@@ -148,7 +168,8 @@ namespace Order_Management.Controllers
                 else
                 {
                     // OTP is incorrect, display error message
-                    ModelState.AddModelError("otp", "Invalid OTP. Please try again.");
+                    TempData["OtpAlertMessage"] = "Invalid OTP. Please try again.";
+                    // ModelState.AddModelError("otp", "Invalid OTP. Please try again.");
                     return View();
                 }
             }
@@ -167,7 +188,7 @@ namespace Order_Management.Controllers
                 }
 
                 // Redirect to a login page or return an error view
-                return RedirectToAction("Register");
+                return RedirectToAction("RegisterUser","Authentication");
             }
         }
     }

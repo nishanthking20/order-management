@@ -24,20 +24,20 @@ namespace Order_Management.Controllers
         public IActionResult Login()
         {
             // Console.WriteLine(id);
-            return View();
+            return RedirectToAction("LoginUser","Authentication");
         }
         public IActionResult Register()
         {
             // Console.WriteLine(id);
-            return View();
+            return RedirectToAction("RegisterUser","Authentication");
         }
         public IActionResult Dashboard()
         {
             // Console.WriteLine(id);
-            return View("~/Views/Shared/Dashboard.cshtml");
+            return RedirectToAction("Dashboard","Dashboard");
         }
         public IActionResult AdminDashboard(){
-            return View("~/Views/Home/AdminDashboard.cshtml");
+            return RedirectToAction("AdminDashboard","Dashboard");
 
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

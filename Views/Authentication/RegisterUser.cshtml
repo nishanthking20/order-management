@@ -6,12 +6,12 @@
 
 <div class="container-sm">
     <form style="width:400px;" class="border border-dark p-4 rounded" method="post" asp-action="RegisterUser"
-        asp-controller="Register">
+        asp-controller="Authentication">
         <h1 class="text-center">Registration</h1>
-        @if (TempData["AlertMessage"] != null)
+        @if (TempData["RegisterAlertMessage"] != null)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                @TempData["AlertMessage"]
+                @TempData["RegisterAlertMessage"]
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
