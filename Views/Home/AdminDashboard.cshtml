@@ -1,3 +1,4 @@
+@model Item
 @{
     ViewData["Title"] = "AdminDashboard";
 }
@@ -18,22 +19,27 @@
       <h3>Add Items</h3>
       <!-- User Login Form -->
       <form>
+    using Microsoft.AspNetCore.Http.Features;
         <div class="form-group">
           <label for="username">Product Name</label>
-          <input type="text" class="form-control" id="username" placeholder="Enter Product Name">
-        </div>
-        <div class="form-group">
-          <label for="">Quantity</label>
-          <input type="text" class="form-control" id="password" placeholder="Enter quantity">
+          <input type="text" class="form-control" asp-for="ItemName" placeholder="Enter Product Name">
         </div>
         <div class="form-group">
           <label for="">Image source:</label>
-          <input type="text" class="form-control" id="password" placeholder="Enter url">
+          <input type="text" class="form-control" asp-for="Image" placeholder="Enter url">
           
         </div>
         <div class="form-group">
+          <label for="">Quantity</label>
+          <input type="text" class="form-control" asp-for="Quantity" placeholder="Enter quantity">
+        </div>
+        <div class="form-group">
           <label for="">Price</label>
-          <input type="number" class="form-control" id="quantity" placeholder="Enter price">
+          <input type="number" class="form-control" asp-for="Price" placeholder="Enter price">
+        </div>
+        <div class="form-group">
+          <label for="">Category</label>
+          <input type="text" class="form-control" asp-for="Category" placeholder="Enter Category">
         </div>
         <button type="submit" class="btn btn-primary mb-3" >Login</button>
       </form>
