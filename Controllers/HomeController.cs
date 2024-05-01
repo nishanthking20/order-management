@@ -36,6 +36,10 @@ namespace Order_Management.Controllers
             // Console.WriteLine(id);
             return View("~/Views/Shared/Dashboard.cshtml");
         }
+        public IActionResult AdminDashboard(){
+            return View("~/Views/Home/AdminDashboard.cshtml");
+
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
