@@ -1,6 +1,6 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Order_Management.Models;
-using System.Diagnostics;
 
 namespace Order_Management.Controllers
 {
@@ -24,26 +24,35 @@ namespace Order_Management.Controllers
         public IActionResult Login()
         {
             // Console.WriteLine(id);
-            return RedirectToAction("LoginUser","Authentication");
+            return RedirectToAction("LoginUser", "Authentication");
         }
+
         public IActionResult Register()
         {
             // Console.WriteLine(id);
-            return RedirectToAction("RegisterUser","Authentication");
+            return RedirectToAction("RegisterUser", "Authentication");
         }
+
         public IActionResult Dashboard()
         {
             // Console.WriteLine(id);
-            return RedirectToAction("Dashboard","Dashboard");
+            return RedirectToAction("Dashboard", "Dashboard");
         }
-        public IActionResult AdminDashboard(){
-            return RedirectToAction("AdminDashboard","Dashboard");
 
+        public IActionResult AdminDashboard()
+        {
+            return RedirectToAction("AdminDashboard", "Dashboard");
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                }
+            );
         }
     }
 }
