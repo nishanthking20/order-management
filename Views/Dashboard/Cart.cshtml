@@ -1,5 +1,34 @@
+@model List<Item>
 @{
     ViewData["Title"] = "Cart";
     Layout = "~/Views/Dashboard/Dashboard.cshtml";
 }
-<p>cart session</p>
+
+<div class="container">
+    <h1>Shopping Cart</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>₹@item.Price</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total Amount</td>
+                <td>₹@Model.Sum(i => i.Price)</td>
+
+            </tr>
+        </tfoot>
+    </table>
+    <a href="#" class="btn btn-primary">Buy Now</a>
+</div>

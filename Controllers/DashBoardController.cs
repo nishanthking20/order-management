@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Order_Management.Data;
 using Order_Management.Models;
@@ -7,13 +8,13 @@ namespace Order_Management.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly ApplicationDbContext DB;
-        public int id;
+        private readonly ApplicationDbContext _context;
 
-        public DashboardController(ApplicationDbContext db_context)
+        public DashboardController(ApplicationDbContext context)
         {
-            DB = db_context;
+            _context = context;
         }
+
         public IActionResult History()
         {
             return View();
@@ -21,45 +22,59 @@ namespace Order_Management.Controllers
 
         public IActionResult Cart()
         {
-            return View();
-        }
+            // Retrieve the serialized items from session
+            var serializedItems = HttpContext.Session.GetString("CartItems");
+            var itemsInCart = serializedItems != null ? JsonSerializer.Deserialize<List<Item>>(serializedItems) : new List<Item>();
+            // Deserialize the JSON string to a list of items
+            var cartItems = !string.IsNullOrEmpty(serializedItems)
+                ? JsonSerializer.Deserialize<List<Item>>(serializedItems)
+                : new List<Item>();
 
-        // [HttpPost]
-        // public IActionResult AdminDashboard(Item item)
-        // {
-        //     var existingItem = DB.Items.FirstOrDefault(u => u.ItemName == item.ItemName);
-        //     if (existingItem != null)
-        //     {
-        //         existingItem.Quantity = item.Quantity;
-        //         TempData["itemAlertMessage"] = "Item SuccessFully Modified";
-        //     }
-        //     else
-        //     {
-        //         TempData["itemAlertMessage"] = "Item SuccessFully added";
-        //         DB.Items.Add(item);
-        //     }
-        //     DB.SaveChanges();
-        //     return View();
-        // }
+            return View(cartItems);
+        }
 
         public IActionResult Items()
         {
-            List<Item> items = DB.Items.ToList<Item>();
-            // foreach(Item item in items) {
-            //     Console.WriteLine(item.ItemName);
-            // }
+            var items = _context.Items.ToList();
             return View(items);
+        }
+
+        [HttpPost]
+        public IActionResult Cart(long? itemId)
+        {
+            // Find the item in the database based on its ID
+            var item = _context.Items.FirstOrDefault(i => i.ItemId == itemId);
+
+            if (item != null)
+            {
+                // Retrieve existing cart items from session
+                var serializedItems = HttpContext.Session.GetString("CartItems");
+                var cartItems = !string.IsNullOrEmpty(serializedItems)
+                    ? JsonSerializer.Deserialize<List<Item>>(serializedItems)
+                    : new List<Item>();
+
+                // Add the new item to the cart
+                cartItems.Add(item);
+
+                // Serialize the updated list of items to JSON and store it in session
+                var updatedSerializedItems = JsonSerializer.Serialize(cartItems);
+                HttpContext.Session.SetString("CartItems", updatedSerializedItems);
+
+                TempData["CartItemAdded"] = $"{item.ItemName} added to cart successfully.";
+            }
+            else
+            {
+                TempData["CartItemAdded"] = "Item not found.";
+            }
+
+            // Redirect back to the items page
+            return RedirectToAction("Items");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(
-                new ErrorViewModel
-                {
-                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-                }
-            );
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

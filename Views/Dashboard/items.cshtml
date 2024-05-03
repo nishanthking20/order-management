@@ -18,19 +18,23 @@
 <body>
     <div class="container">
         <div class="row mt-4">
-            @foreach(Item item in Model.OrderBy(i => i.Category))
+            @foreach (Item item in Model.OrderBy(i => i.Category))
             {
                 <div class="col">
-                    <div class="card mb-4" style="min-height:18rem; width: 18rem;";>
-                        <img src="@item.Image" style="height: 200px; width:200px"; class="card-img-top" alt="...">
+                    <div class="card mb-4" style="min-height:18rem; width: 18rem;" ;>
+                        <img src="@item.Image" style="height: 200px; width:200px" ; class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">@item.ItemName</h5>
                             <div class="grid">
-                                <p class="card-text">₹@item.Price</p>
-                                <p class="card-text">Availability=@item.Quantity</p>
+                                <p class="card-text">₹@item.Price.ToString("C")</p>
+                                <p class="card-text">Availability=@item.Quantity.ToString("C")</p>
                                 <p class="card-text">Category=@item.Category</p>
                             </div>
-                            <button type="button" class="btn btn-primary mt-2">Add to cart</button>
+                            <form method="post" asp-controller="Dashboard" asp-action="Cart">
+                                <input type="hidden" name="itemId" value="@item.ItemId" />
+                                <button type="submit" class="btn btn-primary mt-2">Add to cart</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>

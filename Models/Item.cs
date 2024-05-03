@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Order_Management.Models
 {
     public class Item
@@ -18,12 +17,10 @@ namespace Order_Management.Models
 
         [Required(ErrorMessage = "Password is required")]
         [StringLength(100)]
-        public string? Quantity { get; set; }
+        public int Quantity { get; set; }
 
-        
         [Required(ErrorMessage = "Confirm password is required")]
-        [StringLength(100)]
-        public string? Price { get; set; }
+        public Decimal Price { get; set; }
 
         [Required(ErrorMessage = "Confirm password is required")]
         [StringLength(100)]
@@ -31,8 +28,15 @@ namespace Order_Management.Models
 
         public override string ToString()
         {
-            return string.Format("Items: {0}, {1}, {2}, {3}, {4}, {5}", ItemId, ItemName, Image, Quantity, Price, Category);
+            return string.Format(
+                "Items: {0}, {1}, {2}, {3}, {4}, {5}",
+                ItemId,
+                ItemName,
+                Image,
+                Quantity,
+                Price,
+                Category
+            );
         }
     }
-
 }
