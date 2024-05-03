@@ -11,26 +11,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/site.css" />
+    @* <link rel="stylesheet" href="~/css/site.css" /> *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
 </head>
 
 <body>
     <div class="container">
-        <div class="row">
+        <div class="row mt-4">
             @foreach(Item item in Model.OrderBy(i => i.Category))
             {
                 <div class="col">
-                    <div class="card" style="width: 18rem;">
-                        <img src="@item.Image" class="card-img-top" alt="...">
+                    <div class="card mb-4" style="min-height:18rem; width: 18rem;";>
+                        <img src="@item.Image" style="height: 200px; width:200px"; class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">@item.ItemName</h5>
-                            <div class="grid col-6">
+                            <div class="grid">
                                 <p class="card-text">₹@item.Price</p>
                                 <p class="card-text">Availability=@item.Quantity</p>
                                 <p class="card-text">Category=@item.Category</p>
                             </div>
-                            <button type="button" class="btn btn-primary">Add to cart</button>
+                            <button type="button" class="btn btn-primary mt-2">Add to cart</button>
                         </div>
                     </div>
                 </div>

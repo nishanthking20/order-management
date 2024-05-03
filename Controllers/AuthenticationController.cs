@@ -47,7 +47,7 @@ namespace Order_Management.Controllers
             {
                 if (user.Password == "admin")
                 {
-                    return RedirectToAction("AdminDashboard", "Dashboard");
+                    return RedirectToAction("AddItem", "AdminDashboard");
                 }
                 // Hash the input password
                 using (SHA256 sha256Hash = SHA256.Create())

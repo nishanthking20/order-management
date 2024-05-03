@@ -1,0 +1,101 @@
+@model User
+@{
+    ViewData["AddCustomer"] = "AddCustomer";
+    Layout = "~/Views/AdminDashboard/AdminDashboard.cshtml";
+}
+<form style="width:400px;" class="border border-dark p-4 rounded" method="post" asp-action="RegisterUser"
+    asp-controller="Authentication">
+    <h1 class="text-center">Registration</h1>
+    @if (TempData["RegisterAlertMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["RegisterAlertMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    <div class="row mb-4">
+        <div class="form-group col">
+            <label asp-for="Name"><strong>Username</strong></label>
+            <input class="form-control" asp-for="Name" type="text" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="form-group col">
+            <label asp-for="Email"><strong>Email</strong></label>
+            <input class="form-control" asp-for="Email" type="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="form-group col">
+            <label asp-for="Password"><strong>Password</strong></label>
+            <input class="form-control" asp-for="Password" type="password" id="passwordInput" />
+            <small>*password must contain one <br> lowercase <br>uppercase <br> symbol <br> digit</small>
+            <div id="strengthIndicator"></div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="form-group col">
+            <label asp-for="ConfirmPassword"><strong>Confirm Password</strong></label>
+            <input class="form-control" asp-for="ConfirmPassword" type="password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="text-center pt-4">
+        <button type="submit" class="btn btn-outline-danger" value="Register">Register</button>
+    </div>
+</form>
+
+
+<script>
+    const passwordInput = document.getElementById('passwordInput');
+    const strengthIndicator = document.getElementById('strengthIndicator');
+    passwordInput.addEventListener('input', function () {
+        const password = passwordInput.value;
+        const strength = getPasswordStrength(password);
+        updateStrengthIndicator(strength);
+    });
+
+    function getPasswordStrength(password) {
+        let score = 0;
+        if (password.length > 0) {
+            score++;
+        }
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+            score++;
+        }
+        if (/\d/.test(password)) {
+            score++;
+        }
+        if (/[^a-zA-Z0-9]/.test(password)) {
+            score++;
+        }
+
+        return score;
+    }
+
+    function updateStrengthIndicator(strength) {
+        switch (strength) {
+            case 0:
+            case 1:
+                strengthIndicator.textContent = 'Weak';
+                strengthIndicator.style.color = 'red';
+                break;
+            case 2:
+            case 3:
+                strengthIndicator.textContent = 'Moderate';
+                strengthIndicator.style.color = 'orange';
+                break;
+            case 4:
+                strengthIndicator.textContent = 'Strong';
+                strengthIndicator.style.color = 'green';
+                break;
+            default:
+                strengthIndicator.textContent = '';
+        }
+    }
+</script>

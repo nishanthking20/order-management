@@ -1,0 +1,42 @@
+@model Item
+@{
+    ViewData["Title"] = "Additem";
+    Layout = "~/Views/AdminDashboard/AdminDashboard.cshtml";
+}
+
+<!-- User Login Form -->
+<form style="width:400px;" class="border border-dark p-4 rounded" method="post" asp-action="AddItem"
+    asp-controller="AdminDashboard">
+    <h3>Add Items</h3>
+    @if (TempData["itemAlertMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["itemAlertMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="ItemName">Product Name</label>
+        <input type="text" class="form-control" asp-for="ItemName" placeholder="Enter Product Name">
+    </div>
+    <div class="form-group">
+        <label asp-for="Image">Image source:</label>
+        <input type="text" class="form-control" asp-for="Image" placeholder="Enter url">
+
+    </div>
+    <div class="form-group">
+        <label asp-for="Quantity">Quantity</label>
+        <input type="text" class="form-control" asp-for="Quantity" placeholder="Enter quantity">
+    </div>
+    <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input type="number" class="form-control" asp-for="Price" placeholder="Enter price">
+    </div>
+    <div class="form-group">
+        <label asp-for="Category">Category</label>
+        <input type="text" class="form-control" asp-for="Category" placeholder="Enter Category">
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Add</button>
+</form>
