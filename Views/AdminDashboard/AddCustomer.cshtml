@@ -8,9 +8,9 @@
     <h1 class="text-center">Registration</h1>
     @if (TempData["RegisterAlertMessage"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible">
             @TempData["RegisterAlertMessage"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button class="btn-close" data-dismiss="alert">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
