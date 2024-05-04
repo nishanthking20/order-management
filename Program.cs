@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Order_Management.Data;
 using Order_Management.Services;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +36,7 @@ app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

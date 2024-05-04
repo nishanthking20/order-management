@@ -30,5 +30,7 @@
             </tr>
         </tfoot>
     </table>
-    <a href="#" class="btn btn-primary">Buy Now</a>
+    <form method="post" asp-controller="Dashboard" asp-action="AddToHistory">
+        <button type="submit" class="btn btn-primary">Buy Now</button>
+    </form>
 </div>
