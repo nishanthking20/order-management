@@ -16,7 +16,16 @@
 </head>
 
 <body>
-    <div class="container">
+    @if (TempData["CartItemAdded"] != null)
+    {
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 5; top: 1rem; right: 1rem;">
+            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["CartItemAdded"]
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+    <div class="container justify-content-end">
         <div class="row mt-4">
             @foreach (Item item in Model.OrderBy(i => i.Category))
             {
@@ -32,7 +41,7 @@
                             </div>
                             <form method="post" asp-controller="Dashboard" asp-action="Cart">
                                 <input type="hidden" name="itemId" value="@item.ItemId" />
-                                <button type="submit" class="btn btn-primary mt-2">Add to cart</button>
+                                <button id="myWish" type="submit" class="btn btn-primary mt-2">Add to cart</button>
                             </form>
 
                         </div>
@@ -42,6 +51,16 @@
         </div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myWish").click(function showAlert() {
+                $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#success-alert").slideUp(500);
+                });
+            });
+            $("#success-alert").hide();
+        });
+    </script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
