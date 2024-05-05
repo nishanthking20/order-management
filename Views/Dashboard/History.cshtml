@@ -1,5 +1,33 @@
+@model List<History>
 @{
     ViewData["Title"] = "History";
     Layout = "~/Views/Dashboard/Dashboard.cshtml";
 }
-<p>this is History</p>
+<div class="container">
+    <h1>History</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S.no</th>
+                <th>Transactiion</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.TransactionId</td>
+                    <td>₹@item.Price</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td>Total Amount</td>
+                <td>₹@Model.Sum(i => i.Price)</td>
+            </tr>
+        </tfoot>
+    </table>

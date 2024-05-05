@@ -40,8 +40,8 @@ namespace Order_Management.Controllers
         public IActionResult LoginUser(User user)
         {
             var users = _context.User;
-            foreach(User user1 in users)
-                Console.WriteLine(user1);
+            // foreach(User user1 in users)
+            //     Console.WriteLine(user1);
             var userInDb = _context.User.FirstOrDefault(u => u.Name == user.Name);
             if (userInDb != null)
             {
@@ -68,6 +68,7 @@ namespace Order_Management.Controllers
                         // Compare the hashed password with the stored hashed password
                         if (userInDb != null && hashedPassword == userInDb.Password)
                         {
+                            HttpContext.Session.SetInt32("userId", userInDb.Id);
                             // Successful login, redirect to the dashboard
                             return RedirectToAction("Items", "Dashboard");
                         }

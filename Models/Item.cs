@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Order_Management.Models
 {
@@ -20,7 +19,7 @@ namespace Order_Management.Models
         public int Quantity { get; set; }
 
         [Required(ErrorMessage = "Confirm password is required")]
-        public Decimal Price { get; set; }
+        public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Confirm password is required")]
         [StringLength(100)]

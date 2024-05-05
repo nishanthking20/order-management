@@ -7,7 +7,8 @@ namespace Order_Management.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
         
         public DbSet<User> User { get; set; }
-        public DbSet<Item> Items{ get; set; } // DbSet for User entity
+        public DbSet<Item> Items{ get; set; } 
+        public DbSet<History> History { get; set; }// DbSet for User entity
         // Add DbSet properties for other entities as needed
     }
 }

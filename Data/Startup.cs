@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 namespace Order_Management.Data
 {
     public class Startup
@@ -12,12 +13,14 @@ namespace Order_Management.Data
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
             // Add session services
             services.AddSession();
             // Register ApplicationDbContext with the dependency injection container
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("DConnection"))
+            );
+
+            
 
             // Other service registrations...
         }
