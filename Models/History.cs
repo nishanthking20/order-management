@@ -4,11 +4,12 @@ namespace Order_Management.Models
 {
     public class History
     {
-        public History(int userId, DateTime date, string? ItemName, decimal Price, int TransactionId) 
+        public History(int userId, DateTime date, string ItemName,int Quantity, decimal Price, long TransactionId) 
         {
             this.userId = userId;
             this.date = date;
             this.ItemName = ItemName;
+            this.Quantity = Quantity;
             this.Price = Price;
             this.TransactionId = TransactionId;
         }
@@ -22,16 +23,18 @@ namespace Order_Management.Models
 
         public DateTime date { get; set;}
         public string? ItemName { get; set;}
+        public int Quantity { get; set;}
         public decimal Price { get; set;}
-        public int TransactionId { get; set;}
+        public long TransactionId { get; set;}
 
         public override string ToString()
         {
             return string.Format(
-                "Items: {0}, {1}, {2}, {3}, {4} ",
+                "Items: {0}, {1}, {2}, {3}, {4}, {5} ",
                 userId,
                 date,
                 ItemName,
+                Quantity,
                 Price,
                 TransactionId
             );

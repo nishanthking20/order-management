@@ -9,7 +9,6 @@ namespace Order_Management.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         private int? userId;
 
         public DashboardController(ApplicationDbContext context)
@@ -19,10 +18,10 @@ namespace Order_Management.Controllers
 
         public IActionResult Index()
         {
-            this.userId = HttpContext.Session.GetInt32("userId");
-            if(this.userId is null)
+            userId = HttpContext.Session.GetInt32("userId");
+            if (userId == null)
                 return RedirectToAction("LoginUser", "Authentication");
-            return View("Items");
+            return RedirectToAction("Items");
         }
 
         public IActionResult History()
@@ -33,18 +32,22 @@ namespace Order_Management.Controllers
 
         public IActionResult AddToHistory()
         {
+            var userId = HttpContext.Session.GetInt32("userId");
+            if(userId == null)
+                return RedirectToAction("LoginUser", "Authentication");
             var transactionId = new Random().Next(100000, 999999);
             var serializedItems = HttpContext.Session.GetString("CartItems");
             var store = !string.IsNullOrEmpty(serializedItems)
                 ? JsonSerializer.Deserialize<List<Item>>(serializedItems)
                 : new List<Item>();
             var purchaseHistoryItems = new List<History>();
-            foreach (var item in store)
+            foreach (var item in store!)
             {
                 var purchaseHistoryItem = new History(
                     (int) userId!,
                     DateTime.Now,
-                    item.ItemName,
+                    (string) item.ItemName!,
+                    item.Quantity,
                     item.Price,
                     transactionId
                 );
@@ -57,18 +60,12 @@ namespace Order_Management.Controllers
 
         public IActionResult Cart()
         {
-            var userId = HttpContext.Session.GetInt32("userId");
-            // Retrieve the serialized items from session
+            userId = HttpContext.Session.GetInt32("userId");
             var serializedItems = HttpContext.Session.GetString("CartItems");
-
-            // Deserialize the JSON string to a list of items
             var cartItems = !string.IsNullOrEmpty(serializedItems)
                 ? JsonSerializer.Deserialize<List<Item>>(serializedItems)
                 : new List<Item>();
 
-            // Get the current user
-
-            // Pass the user object and cart items to the view
             ViewData["User"] = userId;
             return View(cartItems);
         }
@@ -80,34 +77,40 @@ namespace Order_Management.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cart(long itemId)
+        public IActionResult Cart(long itemId, int quantity)
         {
-            // Find the item in the database based on its ID
             var item = _context.Items.FirstOrDefault(i => i.ItemId == itemId);
 
             if (item != null)
             {
-                // Retrieve existing cart items from session
                 var serializedItems = HttpContext.Session.GetString("CartItems");
                 var cartItems = !string.IsNullOrEmpty(serializedItems)
                     ? JsonSerializer.Deserialize<List<Item>>(serializedItems)
                     : new List<Item>();
 
-                // Add the new item to the cart
-                cartItems.Add(item);
+                var existingItem = cartItems!.FirstOrDefault(ci => ci.ItemId == itemId);
 
-                // Serialize the updated list of items to JSON and store it in session
+                if (existingItem != null)
+                {
+                    existingItem.Quantity += 1;
+                }
+                else
+                {
+                    item.Quantity = 1;
+                    cartItems!.Add(item);
+                }
+
                 var updatedSerializedItems = JsonSerializer.Serialize(cartItems);
                 HttpContext.Session.SetString("CartItems", updatedSerializedItems);
 
-                TempData["CartItemAdded"] = $"{item.ItemName} added to cart successfully.";
+                TempData["CartItemAdded"] =
+                    $"{quantity} {item.ItemName}(s) added to cart successfully.";
             }
             else
             {
                 TempData["CartItemAdded"] = "Item not found.";
             }
 
-            // Redirect back to the items page
             return RedirectToAction("Items");
         }
 

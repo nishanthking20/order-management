@@ -9,25 +9,20 @@
         <thead>
             <tr>
                 <th>S.no</th>
+                <th>Date</th>
                 <th>Transactiion</th>
-                <th>Price</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.ItemName</td>
+                    <td>@item.sno</td>
+                    <td>@item.date</td>
                     <td>@item.TransactionId</td>
-                    <td>₹@item.Price</td>
+                    <td>₹@(item.Quantity*item.Price)</td>
                 </tr>
             }
         </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td>Total Amount</td>
-                <td>₹@Model.Sum(i => i.Price)</td>
-            </tr>
-        </tfoot>
     </table>

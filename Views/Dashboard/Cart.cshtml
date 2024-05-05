@@ -6,34 +6,55 @@
 
 <div class="container">
     <h1>Shopping Cart</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.ItemName</td>
-                    <td>@item.Quantity</td>
-                    <td>₹@item.Price</td>
-                    <td>₹@(item.Price * item.Quantity)</td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3"><strong>Total Amount</strong></td>
-                <td><strong>₹@Model.Sum(i => i.Price * i.Quantity)</strong></td>
-            </tr>
-        </tfoot>
-    </table>
     <form method="post" asp-controller="Dashboard" asp-action="AddToHistory">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ItemName</td>
+                        <td>
+                            <input type="number" name="quantities[@item.ItemId]" value="@item.Quantity" min="1" max="15" onchange="updateTotal(this)" />
+                        </td>
+                        <td>₹@item.Price</td>
+                        <td>₹<span class="total" data-price="(@(item.Price*item.Quantity)">@(item.Price * item.Quantity)</span></td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Total Amount</strong></td>
+                    <td id="totalAmount"><strong>₹@Model.Sum(i => i.Price*i.Quantity)</strong></td>
+                </tr>
+            </tfoot>
+        </table>
         <button type="submit" class="btn btn-primary">Buy Now</button>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        function updateTotal(input) {
+            console.log("in update total");
+            var quantity = parseInt(input.value);
+            var price = parseFloat(input.parentElement.nextElementSibling.innerText.replace('₹', ''));
+            var total = quantity * price;
+            input.parentElement.nextElementSibling.nextElementSibling.querySelector('.total').innerText = '₹' + total.toFixed(2);
+
+            // Update total amount
+            var totalAmount = 0;
+            document.querySelectorAll('.total').forEach(span => {
+                totalAmount += parseFloat(span.innerText.replace('₹', ''));
+            });
+            document.getElementById('totalAmount').innerText = '₹' + totalAmount.toFixed(2);
+        }
+    </script>
+}
