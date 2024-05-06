@@ -6,22 +6,22 @@ namespace Order_Management.Models
     {
         public int ItemId { get; set; }
 
-        [Required(ErrorMessage = "Username is required")]
+        [Required(ErrorMessage = "Itemname is required")]
         [StringLength(100)]
         public string? ItemName { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "Image is required")]
         [StringLength(100)]
         public string? Image { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
+        [Required(ErrorMessage = "Quantity is required")]
         [StringLength(100)]
         public int Quantity { get; set; }
 
-        [Required(ErrorMessage = "Confirm password is required")]
+        [Required(ErrorMessage = "Price is required")]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Confirm password is required")]
+        [Required(ErrorMessage = "Category is required")]
         [StringLength(100)]
         public string? Category { get; set; }
 

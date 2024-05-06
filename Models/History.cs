@@ -14,7 +14,7 @@ namespace Order_Management.Models
             this.TransactionId = TransactionId;
         }
 
-        // [Required]
+        
         [Key]
         public int sno { get; set;}
         public int userId { get; set;}
@@ -27,18 +27,18 @@ namespace Order_Management.Models
         public decimal Price { get; set;}
         public long TransactionId { get; set;}
 
-        public override string ToString()
-        {
-            return string.Format(
-                "Items: {0}, {1}, {2}, {3}, {4}, {5} ",
-                userId,
-                date,
-                ItemName,
-                Quantity,
-                Price,
-                TransactionId
-            );
-        }
+        // public override string ToString()
+        // {
+        //     return string.Format(
+        //         "Items: {0}, {1}, {2}, {3}, {4}, {5} ",
+        //         userId,
+        //         date,
+        //         ItemName,
+        //         Quantity,
+        //         Price,
+        //         TransactionId
+        //     );
+        // }
 
     }
 }

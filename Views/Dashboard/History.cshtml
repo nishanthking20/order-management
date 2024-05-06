@@ -8,21 +8,23 @@
     <table class="table">
         <thead>
             <tr>
-                <th>S.no</th>
+                <th>Transaction ID</th>
                 <th>Date</th>
-                <th>Transactiion</th>
                 <th>Total</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var transactionGroup in Model.GroupBy(h => h.TransactionId))
             {
+                var transactionTotal = transactionGroup.Sum(h => h.Quantity * h.Price);
                 <tr>
-                    <td>@item.sno</td>
-                    <td>@item.date</td>
-                    <td>@item.TransactionId</td>
-                    <td>₹@(item.Quantity*item.Price)</td>
+                    <td>@transactionGroup.Key</td>
+                    <td>@transactionGroup.First().date</td>
+                    <td>₹@transactionTotal</td>
+                    <td><a href="@Url.Action("ViewTransaction", "Dashboard", new { transactionId = transactionGroup.Key })">View Details</a></td>
                 </tr>
             }
         </tbody>
     </table>
+</div>

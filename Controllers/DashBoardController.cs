@@ -26,14 +26,24 @@ namespace Order_Management.Controllers
 
         public IActionResult History()
         {
-            var histories = _context.History.ToList();
-            return View(histories);
+            var historyItems = _context.History.ToList();
+
+            return View(historyItems);
+        }
+
+        public IActionResult ViewTransaction(int transactionId)
+        {
+            var transactionItems = _context
+                .History.Where(h => h.TransactionId == transactionId)
+                .ToList();
+
+            return View(transactionItems);
         }
 
         public IActionResult AddToHistory()
         {
             var userId = HttpContext.Session.GetInt32("userId");
-            if(userId == null)
+            if (userId == null)
                 return RedirectToAction("LoginUser", "Authentication");
             var transactionId = new Random().Next(100000, 999999);
             var serializedItems = HttpContext.Session.GetString("CartItems");
@@ -44,9 +54,9 @@ namespace Order_Management.Controllers
             foreach (var item in store!)
             {
                 var purchaseHistoryItem = new History(
-                    (int) userId!,
+                    (int)userId!,
                     DateTime.Now,
-                    (string) item.ItemName!,
+                    (string)item.ItemName!,
                     item.Quantity,
                     item.Price,
                     transactionId
