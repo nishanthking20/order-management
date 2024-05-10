@@ -40,19 +40,31 @@ namespace Order_Management.Controllers
             return View(transactionItems);
         }
 
+        [HttpPost]
         public IActionResult AddToHistory()
         {
             var userId = HttpContext.Session.GetInt32("userId");
             if (userId == null)
                 return RedirectToAction("LoginUser", "Authentication");
+
             var transactionId = new Random().Next(100000, 999999);
             var serializedItems = HttpContext.Session.GetString("CartItems");
             var store = !string.IsNullOrEmpty(serializedItems)
                 ? JsonSerializer.Deserialize<List<Item>>(serializedItems)
                 : new List<Item>();
+
             var purchaseHistoryItems = new List<History>();
+
             foreach (var item in store!)
             {
+                // Reduce the quantity of the item in the database
+                var dbItem = _context.Items.FirstOrDefault(i => i.ItemId == item.ItemId);
+                if (dbItem != null)
+                {
+                    dbItem.Quantity -= item.Quantity;
+                    _context.SaveChanges();
+                }
+
                 var purchaseHistoryItem = new History(
                     (int)userId!,
                     DateTime.Now,
@@ -64,6 +76,9 @@ namespace Order_Management.Controllers
                 _context.History.Add(purchaseHistoryItem);
                 _context.SaveChanges();
             }
+
+            // Clear the cart after purchase
+            HttpContext.Session.Remove("CartItems");
 
             return RedirectToAction("Cart");
         }
