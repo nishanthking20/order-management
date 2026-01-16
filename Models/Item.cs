@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Order_Management.Models
 {
@@ -11,11 +12,10 @@ namespace Order_Management.Models
         public string? ItemName { get; set; }
 
         [Required(ErrorMessage = "Image is required")]
-        [StringLength(100)]
+        [StringLength(10000)]
         public string? Image { get; set; }
 
         [Required(ErrorMessage = "Quantity is required")]
-        [StringLength(100)]
         public int Quantity { get; set; }
 
         [Required(ErrorMessage = "Price is required")]
@@ -24,18 +24,23 @@ namespace Order_Management.Models
         [Required(ErrorMessage = "Category is required")]
         [StringLength(100)]
         public string? Category { get; set; }
+        
+        [NotMapped]
+        public int MaxQuantity { get; set; }
 
-        public override string ToString()
-        {
-            return string.Format(
-                "Items: {0}, {1}, {2}, {3}, {4}, {5}",
-                ItemId,
-                ItemName,
-                Image,
-                Quantity,
-                Price,
-                Category
-            );
-        }
+        [NotMapped]
+        public int ChangedQuantity { get; set; }
+        // public override string ToString()
+        // {
+        //     return string.Format(
+        //         "Items: {0}, {1}, {2}, {3}, {4}, {5}",
+        //         ItemId,
+        //         ItemName,
+        //         Image,
+        //         Quantity,
+        //         Price,
+        //         Category
+        //     );
+        // }
     }
 }
