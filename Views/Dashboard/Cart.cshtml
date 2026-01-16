@@ -22,11 +22,10 @@
                     <tr>
                         <td>@item.ItemName</td>
                         <td>
-                            <input type="number" name="quantities[@item.ItemId]" asp-for="ChangedQuantity" value="@item.Quantity" min="1" max="@item.MaxQuantity" onchange="updateTotal(this)" />
+                            <input type="number" name="quantities[@item.ItemId]" value="@item.Quantity" min="1" max="@item.MaxQuantity" onchange="updateTotal(this)" />
                         </td>
                         <td>₹@item.Price</td>
-                        <td>₹<span class="total" data-price="(@(item.Price * item.Quantity)">@(item.Price *
-                            item.Quantity)</span></td>
+                        <td>₹<span class="total" data-price="@(item.Price * item.Quantity)">@(item.Price * item.Quantity)</span></td>
                     </tr>
                 }
             </tbody>
